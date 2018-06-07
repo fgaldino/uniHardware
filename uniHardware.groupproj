@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{F3B0BAA1-9710-439F-8DC0-87F5B1475940}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="uniGUI_Exemplo\uniGUI_Client.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="sHardware.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="uniGUI_Client">
+        <MSBuild Projects="uniGUI_Exemplo\uniGUI_Client.dproj"/>
+    </Target>
+    <Target Name="uniGUI_Client:Clean">
+        <MSBuild Projects="uniGUI_Exemplo\uniGUI_Client.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="uniGUI_Client:Make">
+        <MSBuild Projects="uniGUI_Exemplo\uniGUI_Client.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="sHardware">
+        <MSBuild Projects="sHardware.dproj"/>
+    </Target>
+    <Target Name="sHardware:Clean">
+        <MSBuild Projects="sHardware.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="sHardware:Make">
+        <MSBuild Projects="sHardware.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="uniGUI_Client;sHardware"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="uniGUI_Client:Clean;sHardware:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="uniGUI_Client:Make;sHardware:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
