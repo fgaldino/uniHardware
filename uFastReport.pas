@@ -42,7 +42,7 @@ end;
 implementation
 
 uses
-  ufrmPrincipal;
+  ufrmPrincipal, udmPrincipal;
 
 { TFastReport }
 
@@ -89,6 +89,8 @@ end;
 procedure TFastReport.ImprimirExec;
 begin
   try
+    dmPrincipal.ServidorStatus := svOcupado;
+
     frmPrincipal.Show;
     frmPrincipal.Left := -1000;
 
@@ -102,8 +104,6 @@ begin
         if EscolherImpressora then
         begin
           frxReport1.PrintOptions.ShowDialog := True;
-          //SetWindowPos(Application.MainForm.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NoMove or SWP_NoSize);
-          //Application.MainForm.BringToFront;
           frxReport1.PreviewPages.Print;
         end
         else
@@ -116,7 +116,6 @@ begin
       else
       begin
         frxReport1.ShowPreparedReport;
-        //Tidsync.SynchronizeMethod(TesteX);
       end;
     except
       on E: Exception do
@@ -126,6 +125,8 @@ begin
     end;
   finally
     frmPrincipal.Hide;
+
+    dmPrincipal.ServidorStatus := svDisponivel;
   end;
 end;
 

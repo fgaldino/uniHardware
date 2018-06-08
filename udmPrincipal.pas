@@ -10,6 +10,9 @@ uses
   System.ImageList, Vcl.ImgList, Vcl.Controls;
 
 type
+  TServerStatus = (svDisponivel, svOcupado, svOffline);
+
+type
   TdmPrincipal = class(TDataModule)
     HTTPServer: TIdHTTPServer;
     procedure HTTPServerCommandGet(AContext: TIdContext;
@@ -17,6 +20,9 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
+    FServidorStatus : TServerStatus;
+
+    procedure SetServidorStatus(const Value: TServerStatus);
   public
     { Public declarations }
     FLock: TCriticalSection;
@@ -25,6 +31,9 @@ type
     function ServerStart(var Erro:string):boolean;
     procedure ServerStop;
     function ServerOnLine:Boolean;
+
+    property ServidorStatus : TServerStatus read FServidorStatus write SetServidorStatus;
+    //property AFileLoad:string read fAFileLoad write fAFileLoad;
   end;
 
 var
@@ -33,7 +42,7 @@ var
 implementation
 
 uses
-  uProcedimentos;
+  uProcedimentos, ufrmPrincipal;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -92,6 +101,30 @@ procedure TdmPrincipal.ServerStop;
 begin
      if HTTPServer.Active then
         HTTPServer.Active := False;
+end;
+
+procedure TdmPrincipal.SetServidorStatus(const Value: TServerStatus);
+begin
+  try
+    //dmPrincipal.FLock.Enter;
+
+    FServidorStatus := Value;
+
+    if Value = svDisponivel then
+    Begin
+      frmPrincipal.TrayIcon1.IconIndex := 1;
+    End
+    else if Value = svOcupado then
+    Begin
+      frmPrincipal.TrayIcon1.IconIndex := 0;
+    End
+    else if Value = svOffline then
+    Begin
+      frmPrincipal.TrayIcon1.IconIndex := 2;
+    End;
+  finally
+    //dmPrincipal.FLock.Leave;
+  end;
 end;
 
 end.

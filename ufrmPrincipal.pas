@@ -80,19 +80,22 @@ begin
   IniciarServidor;
 end;
 
-function TfrmPrincipal.IniciarServidor:boolean;
-var erro:string;
+function TfrmPrincipal.IniciarServidor : boolean;
+var
+  erro : string;
 begin
-    result := dmPrincipal.ServerStart(erro);
-    if not result then
-        BalloonInfo(bfError,cons.TituloSistema,cons.FalhaStartServer) else
-    begin
-         TrayIcon1.IconIndex := 1;
+  result := dmPrincipal.ServerStart(erro);
 
-         IniciarPlugin1.Enabled := false;
-         PararPlugin1.Enabled := true;
-         BalloonInfo(bfNone,cons.TituloSistema,cons.SucessStartSever);
-    end;
+  if Not result then
+    BalloonInfo(bfError, cons.TituloSistema, cons.FalhaStartServer)
+  else
+  begin
+    dmPrincipal.ServidorStatus := svDisponivel;
+
+    IniciarPlugin1.Enabled := false;
+    PararPlugin1.Enabled := true;
+    BalloonInfo(bfNone, cons.TituloSistema, cons.SucessStartSever);
+  end;
 end;
 
 procedure TfrmPrincipal.PararPlugin1Click(Sender: TObject);
@@ -100,7 +103,8 @@ begin
   try
     try
       dmPrincipal.ServerStop;
-      TrayIcon1.IconIndex := 2;
+
+      dmPrincipal.ServidorStatus := svOffline;
     except
     end;
   finally
